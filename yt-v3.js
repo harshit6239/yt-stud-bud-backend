@@ -38,7 +38,7 @@ async function getEmbeddedVideo(videoId) {
         const videoData = response.data.items[0];
         const videoTitle = videoData.snippet.title;
         const videoUrl = `https://www.youtube.com/embed/${videoId}`;
-        const embeddedVideo = `<iframe width="560" height="315" src="${videoUrl}" title="${videoTitle}" frameborder="0"  clipboard-write; picture-in-picture" allowfullscreen></iframe>`;
+        const embeddedVideo = `<iframe width="560" height="315" src="${videoUrl}" title="${videoTitle}" frameborder="0" picture-in-picture" allowfullscreen></iframe>`;
         return embeddedVideo;
     } catch (error) {
         console.error("Error getting embedded video:", error);
