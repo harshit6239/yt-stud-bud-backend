@@ -4,7 +4,7 @@ import run from '../gemini-start.js';
 import multer from 'multer';
 import cookieParser from 'cookie-parser';
 import validateToken from '../middleware/validateToken.js';
-import { getAllFolders, getItems, createFolder } from '../controllers/note.controller.js';
+import { createNote, getNote, updateNote, getItems, createFolder } from '../controllers/note.controller.js';
 
 const upload = multer({ dest: 'uploads/'});
 
@@ -14,9 +14,17 @@ router.use(cookieParser());
 
 router.use(validateToken);
 
-router.get('/test/folder', (req, res)=>{
-    getAllFolders(req, res);
+router.post('/items/note', (req, res) => {
+    createNote(req, res);
+});
+
+router.get('/items/note', (req, res) => {
+    getNote(req, res);
 })
+
+router.patch('/items/note', (req, res) => {
+    updateNote(req, res);
+});
 
 router.get('/items', (req, res) => {
     getItems(req, res);

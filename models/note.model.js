@@ -6,13 +6,15 @@ const noteSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    note: {
+    content: {
         type: String,
-        required: true
+        trim: true,
+        default: ""
     },
     videoId: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
     }
 }, { timestamps: true });
 

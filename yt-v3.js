@@ -28,22 +28,12 @@ async function searchVideos(query) {
     }
 }
 
-async function getEmbeddedVideo(videoId) {
-    console.log("Getting embedded video for video ID:", videoId);
-    try {
-        const response = await youtube.videos.list({
-            part: "snippet",
-            id: videoId,
-        });
-        const videoData = response.data.items[0];
-        const videoTitle = videoData.snippet.title;
-        const videoUrl = `https://www.youtube.com/embed/${videoId}`;
-        const embeddedVideo = `<iframe width="560" height="315" src="${videoUrl}" title="${videoTitle}" frameborder="0" picture-in-picture" allowfullscreen></iframe>`;
-        return embeddedVideo;
-    } catch (error) {
-        console.error("Error getting embedded video:", error);
-        return "Error getting embedded video.";
-    }
+async function findVideoById(videoId) {
+    const response = await youtube.videos.list({
+        part: "snippet",
+        id: videoId,
+    });
+    return response.data.items[0];
 }
 
-export { searchVideos, getEmbeddedVideo };
+export { searchVideos, findVideoById };
