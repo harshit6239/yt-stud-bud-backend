@@ -4,7 +4,7 @@ import run from '../gemini-start.js';
 import multer from 'multer';
 import cookieParser from 'cookie-parser';
 import validateToken from '../middleware/validateToken.js';
-import { createNote, getNote, updateNote, getItems, createFolder } from '../controllers/note.controller.js';
+import { createNote, getNote, updateNote, deleteNote, getItems, createFolder, deleteFolder } from '../controllers/note.controller.js';
 
 const upload = multer({ dest: 'uploads/'});
 
@@ -26,6 +26,10 @@ router.patch('/items/note', (req, res) => {
     updateNote(req, res);
 });
 
+router.post('/items/note/delete', (req, res) => {
+    deleteNote(req, res);
+});
+
 router.get('/items', (req, res) => {
     getItems(req, res);
 });
@@ -33,6 +37,10 @@ router.get('/items', (req, res) => {
 router.post('/items/folder', (req, res) => {
     createFolder(req, res);
 });
+
+router.post('/items/folder/delete', (req, res)=>{
+    deleteFolder(req, res);
+})
 
 router.post('/upload', upload.single('image'), async (req, res) => {
     const file = req.file;

@@ -98,6 +98,40 @@ const updateNote = async (req, res) => {
     }
 }
 
+const deleteNote = async (req, res) => {
+    try{
+        const { id } = req.body;
+        if(!id){
+            res.status(400).json({ message: "Note ID is required" });
+            return;
+        }
+        Note.findByIdAndDelete(id).then(note => {
+            if(!note){
+                res.status(404).json({ message: "Note not found" });
+                return;
+            }
+            Item.findOneAndDelete({ noteId: id }).then(item => {
+                if(!item){
+                    res.status(404).json({ message: "Item not found" });
+                    return;
+                }
+                res.status(200).json({ message: "Note deleted successfully" });
+                return;
+            }).catch(error => {
+                res.status(500).json({ message: error.message });
+                return;
+            })
+        }).catch(error => {
+            res.status(500).json({ message: error.message });
+            return;
+        });
+    }
+    catch(error){
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
 const createFolder = async (req, res) => {
     let parent;
     let name;
@@ -143,6 +177,43 @@ const createFolder = async (req, res) => {
     }
 }
 
+const deleteFolder = async (req, res) => {
+    try{
+        const { id } = req.body;
+        if(!id){
+            res.status(400).json({ message: "Folder ID is required" });
+            return;
+        }
+        let folders = [];
+        folders.push(id);
+        let notes = [];
+        for(let i=0;i<folders.length;i++){
+            let childFolders = await Item.find({ user: req.user.id, type: "folder", parent: folders[i] }).populate("folderId");
+            let childNotes = await Item.find({ user: req.user.id, type: "note", parent: folders[i] }).populate("noteId");
+            for(let folder of childFolders){
+                folders.push(folder.folderId._id);
+            }
+            for(let note of childNotes){
+                notes.push(note.noteId._id);
+            }
+        }
+        for(let note of notes){
+            await Note.findByIdAndDelete(note);
+            await Item.findOneAndDelete({ noteId: note });
+        }
+        for(let folder of folders){
+            await Folder.findByIdAndDelete(folder);
+            await Item.findOneAndDelete({ folderId: folder });
+        }
+        res.status(200).json({ message: "Folder deleted successfully" });
+        return;
+    }
+    catch(error){
+        res.status(500).json({ message: error.message });
+        return;
+    }
+}
+
 const getItems = async (req, res) => {
     try{
         let parentName;
@@ -179,4 +250,4 @@ const getItems = async (req, res) => {
     }
 }
 
-export { createNote, getNote, updateNote, createFolder, getItems };
+export { createNote, getNote, updateNote, deleteNote, createFolder, deleteFolder, getItems };
