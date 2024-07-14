@@ -4,7 +4,7 @@ import run from '../gemini-start.js';
 import multer from 'multer';
 import cookieParser from 'cookie-parser';
 import validateToken from '../middleware/validateToken.js';
-import { createNote, getNote, updateNote, deleteNote, getItems, createFolder, deleteFolder } from '../controllers/note.controller.js';
+import { createNote, getNote, getNotesFromVid, updateNote, deleteNote, getItems, createFolder, deleteFolder } from '../controllers/note.controller.js';
 
 const upload = multer({ dest: 'uploads/'});
 
@@ -13,6 +13,10 @@ const router = express.Router();
 router.use(cookieParser());
 
 router.use(validateToken);
+
+router.get('/', (req, res)=>{
+    getNotesFromVid(req, res);
+})
 
 router.post('/items/note', (req, res) => {
     createNote(req, res);

@@ -69,9 +69,25 @@ const getNote = async (req, res) => {
     }
 }
 
+const getNotesFromVid = async (req, res) => {
+    try{
+        const vid = req.query.videoId;
+        if(!vid){
+            res.status(400).json({ message: "Video ID is required" });
+            return;
+        }
+        const notes = await Note.find({ videoId: vid, user: req.user.id });
+        res.status(200).json({ notes });
+    }
+    catch(error){
+        res.status(500).json({ message: error.message });
+        return;
+    }
+};
+
 const updateNote = async (req, res) => {
     try{
-        const { id, content } = req.body;
+        const { id, content, markdown } = req.body;
         if(!id){
             res.status(400).json({ message: "Note ID is required" });
             return;
@@ -80,7 +96,11 @@ const updateNote = async (req, res) => {
             res.status(400).json({ message: "Content is required" });
             return;
         }
-        Note.findByIdAndUpdate(id, { content }, { new: true }).then(note => {
+        if(!markdown){
+            res.status(400).json({ message: "Markdown is required" });
+            return;
+        }
+        Note.findByIdAndUpdate(id, { content, markdown }, { new: true }).then(note => {
             if(!note){
                 res.status(404).json({ message: "Note not found" });
                 return;
@@ -250,4 +270,4 @@ const getItems = async (req, res) => {
     }
 }
 
-export { createNote, getNote, updateNote, deleteNote, createFolder, deleteFolder, getItems };
+export { createNote, getNote, getNotesFromVid, updateNote, deleteNote, createFolder, deleteFolder, getItems };

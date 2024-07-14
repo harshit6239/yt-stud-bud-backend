@@ -2,6 +2,8 @@ import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 
+
+
 const registerSchema = z.object({
     username: z
     .string({required_error: "Username is required"})

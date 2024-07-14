@@ -13,6 +13,7 @@ router.get('/validate', validateToken, (req, res) => {
 })
 
 router.post('/login', validateSchema(loginSchema), (req, res) => {
+    console.log(req.body);
     loginUser(req, res);
 });
 router.post('/register', validateSchema(registerSchema), (req, res) => {

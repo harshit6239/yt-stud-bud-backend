@@ -11,6 +11,11 @@ const noteSchema = new mongoose.Schema({
         trim: true,
         default: ""
     },
+    markdown: {
+        type: String,
+        trim: true,
+        default: ""
+    },
     videoId: {
         type: String,
         required: true,
